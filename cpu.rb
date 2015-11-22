@@ -2,23 +2,23 @@ require_relative './destinations.rb'
 require_relative './sources.rb'
 
 class Cpu
-  attr_accesser :b
+  attr_accessor :a
 
   def initialize
     @a = 0
     @b = 0
     @instruction_pointer = 0
     @instructions = [
-      Instruction.new (:mov, SourceIn.new(self), DestinationA.new(self) ),
-      Instruction.new (:jez, 4 ),
-      Instruction.new (:add, SourceIn.new(self)),
-      Instruction.new (:mov, SourceA.new(self), DestinationOut.new(self) ),
-      Instruction.new (:jmp, -4 )
+      Instruction.new(:mov, SourceIn.new(self), DestinationA.new(self) ),
+      Instruction.new(:jez, 4 ),
+      Instruction.new(:add, SourceIn.new(self)),
+      Instruction.new(:mov, SourceA.new(self), DestinationOut.new(self) ),
+      Instruction.new(:jmp, -4 )
     ]
   end
 
   def run
-    while true
+    while @instruction_pointer < @instructions.size
       instruction = @instructions[@instruction_pointer]
 
       process_instruction(instruction)
@@ -125,6 +125,8 @@ class Instruction
   end
 end
 
+cpu = Cpu.new
+cpu.run
 
 
 
