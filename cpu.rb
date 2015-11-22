@@ -4,18 +4,12 @@ require_relative './sources.rb'
 class Cpu
   attr_accessor :a
 
-  def initialize(instructions)
+  def initialize(bus, instructions)
+    @bus = bus
     @a = 0
     @b = 0
     @instruction_pointer = 0
     @instructions = instructions
-    # [
-    #   Instruction.new(:mov, 'in', DestinationA.new(self) ),
-    #   Instruction.new(:jez, 4 ),
-    #   Instruction.new(:add, SourceIn.new(self)),
-    #   Instruction.new(:mov, SourceA.new(self), DestinationOut.new(self) ),
-    #   Instruction.new(:jmp, -4 )
-    # ]
   end
 
   def run
@@ -40,7 +34,11 @@ class Cpu
     when 'null'
       SourceNull.new
     else
-      SourceInt.new(source_str.to_i)
+      if source_str.start_with?('#')
+        SourceCpu.new(self, source_str[1..-1].to_i)
+      else
+        SourceInt.new(source_str.to_i)
+      end
     end
   end
 
@@ -52,6 +50,8 @@ class Cpu
       DestinationA.new(self)
     when 'null'
       DestinationNull.new
+    else
+      DestinationCpu.new(self, dest_str[1..-1].to_i)
     end
   end
 
@@ -81,11 +81,19 @@ class Cpu
   end
 
   def write_bus_value(value)
-    puts value
+    @bus.write_value(value)
   end
 
   def read_bus_value
-    $stdin.gets.chomp.to_i
+    @bus.read_value
+  end
+
+  def write_cpu_value(cpu_id, value)
+    @bus.write_cpu_value(cpu_id, value)
+  end
+
+  def read_cpu_value(cpu_id)
+    @bus.read_cpu_value(cpu_id)
   end
 
   private

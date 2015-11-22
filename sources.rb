@@ -33,3 +33,14 @@ class SourceInt
     @value
   end
 end
+
+class SourceCpu
+  def initialize(cpu, cpu_id)
+    @cpu_id = cpu_id
+    @cpu = cpu
+  end
+
+  def read_value
+    @cpu.read_cpu_value(@cpu_id)
+  end
+end
