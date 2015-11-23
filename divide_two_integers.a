@@ -1,0 +1,8 @@
+#0      ~ defines program for CPU #0
+mov in, a   ~ accept integer from input bus, store in a register
+jez +4    ~ if a equals 0, jump to the end of the program
+div in    ~ div integer from input bus to a, store result in a, remainder in b
+mov a, out    ~ writes register a to output bus
+swp         ~ swaps remainder into a
+mov a, out  ~output remainder
+jmp -100    ~ jumps back to start of program

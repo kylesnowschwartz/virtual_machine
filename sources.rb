@@ -1,10 +1,10 @@
 class SourceIn
-  def initialize(cpu)
-    @cpu = cpu
+  def initialize(bus)
+    @bus = bus
   end
 
   def read_value
-    @cpu.read_bus_value
+    @bus.read_value
   end
 end
 
@@ -35,12 +35,12 @@ class SourceInt
 end
 
 class SourceCpu
-  def initialize(cpu, cpu_id)
+  def initialize(bus, cpu_id)
     @cpu_id = cpu_id
-    @cpu = cpu
+    @bus = bus
   end
 
   def read_value
-    @cpu.read_cpu_value(@cpu_id)
+    @bus.read_cpu_value(@cpu_id)
   end
 end

@@ -28,14 +28,14 @@ class Cpu
   def get_source(source_str)
     case source_str
     when 'in'
-      SourceIn.new(self)
+      SourceIn.new(@bus)
     when 'a'
       SourceA.new(self)
     when 'null'
       SourceNull.new
     else
       if source_str.start_with?('#')
-        SourceCpu.new(self, source_str[1..-1].to_i)
+        SourceCpu.new(@bus, source_str[1..-1].to_i)
       else
         SourceInt.new(source_str.to_i)
       end
@@ -45,13 +45,13 @@ class Cpu
   def get_dest(dest_str)
     case dest_str
     when 'out'
-      DestinationOut.new(self)
+      DestinationOut.new(@bus)
     when 'a'
       DestinationA.new(self)
     when 'null'
       DestinationNull.new
     else
-      DestinationCpu.new(self, dest_str[1..-1].to_i)
+      DestinationCpu.new(@bus, dest_str[1..-1].to_i)
     end
   end
 
@@ -67,6 +67,10 @@ class Cpu
       add(get_source(instruction.args[0]))
     when :sub
       sub(get_source(instruction.args[0]))
+    when :mul
+      mul(get_source(instruction.args[0]))
+    when :div
+      div(get_source(instruction.args[0]))
     when :jmp
       jmp(instruction.args[0].to_i)
     when :jez
@@ -78,22 +82,6 @@ class Cpu
     when :jlz
       jlz(instruction.args[0].to_i)
     end
-  end
-
-  def write_bus_value(value)
-    @bus.write_value(value)
-  end
-
-  def read_bus_value
-    @bus.read_value
-  end
-
-  def write_cpu_value(cpu_id, value)
-    @bus.write_cpu_value(cpu_id, value)
-  end
-
-  def read_cpu_value(cpu_id)
-    @bus.read_cpu_value(cpu_id)
   end
 
   private
@@ -116,6 +104,16 @@ class Cpu
 
   def sub(source)
     @a -= source.read_value
+  end
+
+  def mul(source)
+    @a *= source.read_value
+  end
+
+  def div(source)
+    value = source.read_value
+    @b = @a % value
+    @a /= value
   end
 
   def jmp(instruction_count)

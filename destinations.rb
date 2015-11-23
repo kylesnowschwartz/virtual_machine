@@ -1,10 +1,10 @@
 class DestinationOut
-  def initialize(cpu)
-    @cpu = cpu
+  def initialize(bus)
+    @bus = bus
   end
 
   def write_value(value)
-    @cpu.write_bus_value(value)
+    @bus.write_value(value)
   end
 end
 
@@ -24,13 +24,13 @@ class DestinationNull
 end
 
 class DestinationCpu
-  def initialize(cpu, cpu_id)
+  def initialize(bus, cpu_id)
     @cpu_id = cpu_id
-    @cpu = cpu
+    @bus = bus
   end
 
   def write_value(value)
-    @cpu.write_cpu_value(@cpu_id, value)
+    @bus.write_cpu_value(@cpu_id, value)
   end
 end
 
