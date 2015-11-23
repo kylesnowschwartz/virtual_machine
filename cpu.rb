@@ -20,7 +20,7 @@ class Cpu
       # p "instruction: #{instruction.inspect}"
       process_instruction(instruction)
 
-      @instruction_pointer += 1
+      @instruction_pointer = [@instruction_pointer + 1, 0].max
       # p "after pointer: #{@instruction_pointer}"
     end
   end

@@ -1,4 +1,3 @@
-
 #0      ~ defines program for CPU #0
 mov in, a   ~ accept integer from input bus, store in a register
 jez +4    ~ if a equals 0, jump to the end of the program
