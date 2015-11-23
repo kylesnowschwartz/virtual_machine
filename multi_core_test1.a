@@ -1,0 +1,14 @@
+#0 ~ defines program for cpu @0
+mov #1, null
+mov 100, out
+
+#1
+mov 1, #2
+mov 1, #0
+
+#2
+mov #3, null
+mov #1, null
+
+#3
+mov 1, #2

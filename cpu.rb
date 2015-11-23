@@ -23,6 +23,8 @@ class Cpu
       @instruction_pointer = [@instruction_pointer + 1, 0].max
       # p "after pointer: #{@instruction_pointer}"
     end
+
+    
   end
 
   def get_source(source_str)

@@ -45,6 +45,10 @@ class VirtualMachine
     while cpu_id
       # puts "resuming cpu: #{cpu_id}"
       cpu_id = @fibers[cpu_id].resume
+      if cpu_id.nil?
+        fiber = @fibers.select { |f| f.alive? }.first
+        cpu_id = @fibers.index(fiber)
+      end
     end
   end
 
@@ -66,7 +70,11 @@ class VirtualMachine
     
     @bus_messages[port_address] = value
     
-    Fiber.yield cpu_id
+    while true
+      Fiber.yield cpu_id
+
+      return if @bus_messages[port_address].nil?
+    end
   end
 
   def read_cpu_value(cpu_id)
@@ -74,17 +82,21 @@ class VirtualMachine
 
     port_address = Struct::PortAddress.new(cpu_id, to_cpu_id)
 
-    value = @bus_messages[port_address]
+    while true
+      value = @bus_messages.delete(port_address)
 
-    return value if value
+      return value if value
 
-    Fiber.yield cpu_id
+      Fiber.yield cpu_id
+    end
   end
 
   def parse_line(line)
-    return nil if line.chomp.empty?
+    stripped_line = line.split('~')[0]
 
-    tokens = line.split('~')[0].split(/,?\s/)
+    return nil if stripped_line.chomp.empty?
+
+    tokens = stripped_line.split(/,?\s/)
 
     op_code = tokens[0].to_sym
 
