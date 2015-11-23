@@ -1,0 +1,9 @@
+#0
+mov -100, a
+add 101
+sav
+mul a
+mov a, out
+swp
+add -100
+jlz -6

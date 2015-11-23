@@ -15,17 +15,14 @@ class Cpu
   def run
     while @instruction_pointer < @instructions.size
       instruction = @instructions[@instruction_pointer]
-      # p "pointer: #{@instruction_pointer}"
-      # p "a: #{@a}, b: #{@b}"
-      # p "instruction: #{instruction.inspect}"
+
       process_instruction(instruction)
 
       @instruction_pointer = [@instruction_pointer + 1, 0].max
-      # p "after pointer: #{@instruction_pointer}"
     end
-
-    
   end
+
+  private
 
   def get_source(source_str)
     case source_str
@@ -86,8 +83,6 @@ class Cpu
     end
   end
 
-  private
-
   def mov(source, destination)
     destination.write_value(source.read_value) 
   end
@@ -129,13 +124,11 @@ class Cpu
     end
   end
 
-
   def jnz(instruction_count)
     if @a != 0
       jmp(instruction_count)
     end
   end
-
 
   def jgz(instruction_count)
     if @a > 0
@@ -148,7 +141,6 @@ class Cpu
       jmp(instruction_count)
     end
   end
-
 end
 
 class Instruction
